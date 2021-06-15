@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/easy_upload.min.css">
+    <title>Title</title>
+</head>
+<body>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script>
+        function loadXMLDoc()
+        {
+            var xmlhttp;
+            if (window.XMLHttpRequest)
+            {
+                // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+                xmlhttp=new XMLHttpRequest();
+            }
+            else
+            {
+                // IE6, IE5 浏览器执行代码
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange=function()
+            {
+                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                    document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+                }
+            }
+
+            xmlhttp.open("POST","http://localhost:8080/tool/img",true);
+            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xmlhttp.send("content=HelloWorld");
+        }
+    </script>
+</head>
+<body>
+
+<h2>AJAX</h2>
+
+<button type="button" onclick="loadXMLDoc()">请求数据</button>
+<div id="myDiv"></div>
+<div id="easy1" class="easy-upload"></div>
+<script src="../js/easyUpload.min.js "></script>
+<script>
+    easyUpload({
+        easyId: 'easy1',
+        action: 'http://localhost:8080/tool/img',
+        accept: '.jpg,.png,.gif,.docx',
+        maxSize: 10, //单位MB
+        maxCount: 10,
+        showLoading: true,
+        setRequestHeader: function(xhr) {
+            xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+        },
+        setRequestHeader: function (xhr) {
+            xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+            //和原生xhr配置api保持一致
+        },
+        buildSendData: function (file) {
+            // var formData = new FormData(); // 发送格式为formData时
+            // formData.append('name', file.file)
+            // return formData;
+
+           return "content="+file.base64;
+
+
+        },
+        checkSuccessCode: function (xhr) {
+            if (/error/.test(xhr.responseText.toLowerCase())) { //这里判断仅仅用于测试，具体看项目
+                return false;
+            } else {
+                return true;
+            } //默认return tue
+        },
+        uploadStart: function (self) {
+            // 文件队列上传前的回调函数，传入唯一参数'self'是当前插件实例
+            console.log('上传开始，现在的队列是', self.files)
+        },
+        uploadEnd: function (self) {
+            // 文件队列上传完成后的回调函数，传入唯一参数'self'是当前插件实例
+            console.log('上传完成了，现在的队列是', self.files)
+        }
+    });
+
+
+</script>
+</body>
+</html>
+</body>
+</html>
